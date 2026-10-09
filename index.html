@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚔️ Guild of Rizz ⚔️</title>
+<style>
+  :root{
+    --bg: #14101f;
+    --bg2: #1e1730;
+    --panel: #241b3d;
+    --gold: #ffd166;
+    --purple: #9b5de5;
+    --pink: #f15bb5;
+    --cyan: #00f5d4;
+    --text: #f1e9ff;
+    --muted: #b8a9d9;
+  }
+  *{ box-sizing: border-box; }
+  html,body{
+    margin:0; padding:0;
+    background: radial-gradient(circle at 20% 10%, #2a1f4d 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    overflow-x: hidden;
+  }
+  a { color: var(--cyan); }
+
+  /* Floating sparkle background */
+  .sparkles {
+    position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
+  }
+  .sparkles span {
+    position: absolute; top: -10%;
+    font-size: 22px;
+    opacity: 0.5;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); }
+    100% { transform: translateY(110vh) rotate(360deg); }
+  }
+
+  header {
+    position: relative;
+    text-align: center;
+    padding: 70px 20px 40px;
+    z-index: 1;
+  }
+  header h1 {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    margin: 0;
+    background: linear-gradient(90deg, var(--gold), var(--pink), var(--purple), var(--cyan));
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 5s linear infinite;
+    text-shadow: 0 0 40px rgba(155,93,229,0.4);
+  }
+  @keyframes shine {
+    to { background-position: 300% center; }
+  }
+  header p.tagline {
+    color: var(--muted);
+    font-size: 1.2rem;
+    margin-top: 10px;
+    font-style: italic;
+  }
+  .badge-row {
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--gold);
+  }
+
+  main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
+
+  section { margin-top: 70px; }
+  h2.section-title {
+    text-align:center;
+    font-size: 1.8rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  p.section-sub {
+    text-align:center;
+    color: var(--muted);
+    margin-top: 0;
+    margin-bottom: 36px;
+  }
+
+  /* Member cards */
+  .members {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 26px;
+  }
+  .card {
+    background: linear-gradient(160deg, var(--panel), var(--bg2));
+    border-radius: 18px;
+    padding: 26px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover {
+    transform: translateY(-8px) rotate(-0.5deg);
+    box-shadow: 0 20px 40px rgba(155,93,229,0.35);
+  }
+  .card .avatar {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.15));
+  }
+  .card h3 {
+    text-align: center;
+    margin: 6px 0 2px;
+    font-size: 1.4rem;
+    color: var(--text);
+  }
+  .card .class {
+    text-align: center;
+    color: var(--pink);
+    font-weight: bold;
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+  }
+  .card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+  }
+  .card ul li {
+    margin: 6px 0;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .stat-bar {
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+    margin: 4px 0 12px;
+  }
+  .stat-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+  }
+  .quote {
+    border-left: 3px solid var(--gold);
+    padding-left: 10px;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 0.88rem;
+    margin-top: 14px;
+  }
+
+  /* Leaderboard */
+  table.leaderboard {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  table.leaderboard th, table.leaderboard td {
+    padding: 14px 16px;
+    text-align: left;
+  }
+  table.leaderboard th {
+    background: rgba(255,255,255,0.06);
+    color: var(--gold);
+  }
+  table.leaderboard tr:nth-child(even) { background: rgba(255,255,255,0.03); }
+
+  /* Quest log */
+  .quests {
+    display: grid;
+    gap: 14px;
+  }
+  .quest {
+    background: var(--panel);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .quest .status {
+    font-size: 1.3rem;
+  }
+  .quest .qtext { flex: 1; }
+  .quest .qtext strong { color: var(--text); }
+  .quest .qtext span { display:block; color: var(--muted); font-size: 0.85rem; }
+  .tag {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(155,93,229,0.25);
+    color: var(--cyan);
+  }
+
+  /* Rules */
+  .rules {
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px dashed rgba(255,209,102,0.4);
+  }
+  .rules ol {
+    padding-left: 22px;
+    line-height: 1.9;
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+    font-size: 0.9rem;
+  }
+  footer .heart { color: var(--pink); }
+
+  .cta {
+    text-align: center;
+    margin-top: 60px;
+  }
+  .cta button {
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    border: none;
+    color: white;
+    padding: 16px 34px;
+    font-size: 1.1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(241,91,181,0.4);
+    transition: transform 0.15s ease;
+  }
+  .cta button:hover { transform: scale(1.06); }
+  #oracle-result {
+    margin-top: 20px;
+    font-size: 1.3rem;
+    color: var(--gold);
+    min-height: 1.6em;
+  }
+</style>
+</head>
+<body>
+
+<div class="sparkles" id="sparkles"></div>
+
+<header>
+  <h1>⚔️ GUILD OF RIZZ ⚔️</h1>
+  <p class="tagline">"Three legends. Zero chill. Infinite rizz."</p>
+  <div class="badge-row">
+    <span class="badge">🏰 Est. Whenever We Felt Like It</span>
+    <span class="badge">🎮 Members: 3</span>
+    <span class="badge">🔥 Rizz Level: Over 9000</span>
+  </div>
+</header>
+
+<main>
+
+  <section id="members">
+    <h2 class="section-title">🛡️ The Guild Roster</h2>
+    <p class="section-sub">Meet the legends who forged this sacred alliance.</p>
+
+    <div class="members">
+
+      <div class="card">
+        <div class="avatar">👑</div>
+        <h3>Jon</h3>
+        <div class="class">The Founder &amp; Supreme Rizzard</div>
+        <ul>
+          <li>🧙 Class: Guild Master / Chief Vibe Officer</li>
+          <li>🎯 Special Move: "Actually, hear me out..."</li>
+          <li>🍕 Weakness: Free food, any food</li>
+        </ul>
+        <div>Rizz</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:97%"></div></div>
+        <div>Charisma</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:92%"></div></div>
+        <div>Reliability</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:60%"></div></div>
+        <div class="quote">"I didn't build this website for attention, I built it because I'm the founder and I said so." 👑</div>
+      </div>
+
+      <div class="card">
+        <div class="avatar">🐉</div>
+        <h3>Zach</h3>
+        <div class="class">The Chaos Dragon</div>
+        <ul>
+          <li>🔥 Class: Wildcard Berserker</li>
+          <li>🎯 Special Move: Says the unhinged thing first</li>
+          <li>😂 Weakness: Can't resist a bad bet</li>
+        </ul>
+        <div>Rizz</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:88%"></div></div>
+        <div>Chaos Energy</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:99%"></div></div>
+        <div>Common Sense</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:31%"></div></div>
+        <div class="quote">"It's not a bad idea if it works. It has never worked." 🎲</div>
+      </div>
+
+      <div class="card">
+        <div class="avatar">🧠</div>
+        <h3>Ed(mond)</h3>
+        <div class="class">The Wise (Questionable) Sage</div>
+        <ul>
+          <li>📚 Class: Overthinking Mage</li>
+          <li>🎯 Special Move: Explains something for 20 minutes nobody asked about</li>
+          <li>🐢 Weakness: Takes forever to text back</li>
+        </ul>
+        <div>Rizz</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:75%"></div></div>
+        <div>Wisdom</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:94%"></div></div>
+        <div>Punctuality</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:15%"></div></div>
+        <div class="quote">"Statistically speaking, I'm always right. Don't fact check that." 🤓</div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="leaderboard">
+    <h2 class="section-title">🏆 Official Rizz Leaderboard</h2>
+    <p class="section-sub">Completely fair. Definitely not made up on the spot.</p>
+    <table class="leaderboard">
+      <tr><th>Rank</th><th>Member</th><th>Title</th><th>Rizz Points</th></tr>
+      <tr><td>🥇 1st</td><td>Jon</td><td>Self-Appointed GOAT</td><td>9,001</td></tr>
+      <tr><td>🥈 2nd</td><td>Zach</td><td>Menace to Society (affectionate)</td><td>8,742</td></tr>
+      <tr><td>🥉 3rd</td><td>Ed</td><td>Undefeated in Arguments Nobody Started</td><td>7,999</td></tr>
+    </table>
+  </section>
+
+  <section id="quests">
+    <h2 class="section-title">📜 Active Quest Log</h2>
+    <p class="section-sub">The sacred duties of the Guild of Rizz.</p>
+    <div class="quests">
+      <div class="quest">
+        <div class="status">✅</div>
+        <div class="qtext"><strong>Survive another group chat argument about nothing</strong><span>Completed approximately 4,000 times.</span></div>
+        <div class="tag">Legendary</div>
+      </div>
+      <div class="quest">
+        <div class="status">🕹️</div>
+        <div class="qtext"><strong>Win game night without Zach flipping the table</strong><span>In progress. Odds not looking great.</span></div>
+        <div class="tag">Ongoing</div>
+      </div>
+      <div class="quest">
+        <div class="status">🍔</div>
+        <div class="qtext"><strong>Decide where to eat in under 45 minutes</strong><span>Failed every attempt since the guild's founding.</span></div>
+        <div class="tag">Impossible</div>
+      </div>
+      <div class="quest">
+        <div class="status">🧾</div>
+        <div class="qtext"><strong>Get Ed to actually read the whole group chat</strong><span>Still pending. He'll ask "wait what happened" in 3... 2...</span></div>
+        <div class="tag">Side Quest</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rules">
+    <h2 class="section-title">📖 Sacred Guild Laws</h2>
+    <p class="section-sub">Break these and face the council (Jon, mostly).</p>
+    <div class="rules">
+      <ol>
+        <li>🫡 What happens in the guild, stays in the guild (unless it's funny, then it's going in the group chat forever).</li>
+        <li>🍟 Whoever suggests the restaurant does not get to complain about the restaurant.</li>
+        <li>🎮 Rage quitting costs you 1 (one) piece of your dignity, non-refundable.</li>
+        <li>📵 "I'll be there in 5 minutes" from Ed legally means 25-40 minutes.</li>
+        <li>🐉 Zach's plans require a minimum of two sanity checks before execution.</li>
+        <li>👑 Jon is always right, per the Guild Constitution, which Jon wrote.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2 class="section-title">🔮 Consult the Rizz Oracle</h2>
+    <p class="section-sub">Ask the Guild a question. The Oracle knows all (it does not).</p>
+    <button onclick="consultOracle()">🎲 Summon Wisdom</button>
+    <div id="oracle-result"></div>
+  </section>
+
+</main>
+
+<footer>
+  Made with <span class="heart">💜</span> and questionable decisions by the Guild of Rizz © 2026<br>
+  Jon 👑 · Zach 🐉 · Ed 🧠
+</footer>
+
+<script>
+  // Falling emoji sparkles background
+  const emojis = ['✨','🔥','⚔️','💎','🎲','👑','🐉'];
+  const container = document.getElementById('sparkles');
+  for (let i = 0; i < 24; i++) {
+    const el = document.createElement('span');
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.animationDuration = (8 + Math.random() * 12) + 's';
+    el.style.animationDelay = (Math.random() * 10) + 's';
+    el.style.fontSize = (14 + Math.random() * 18) + 'px';
+    container.appendChild(el);
+  }
+
+  const oracleLines = [
+    "🔮 The Oracle says: order the pizza, not the salad.",
+    "🔮 The Oracle says: Zach's idea will absolutely backfire, but do it anyway.",
+    "🔮 The Oracle says: Ed is right this time. Annoyingly.",
+    "🔮 The Oracle says: Jon should not be trusted with the aux cord.",
+    "🔮 The Oracle says: today's rizz levels are dangerously high.",
+    "🔮 The Oracle says: cancel your plans, guild night has been declared.",
+    "🔮 The Oracle says: someone is about to lose an argument they started.",
+    "🔮 The Oracle says: the group chat will not survive this weekend.",
+    "🔮 The Oracle says: yes, that WAS a bad idea. Do it anyway.",
+    "🔮 The Oracle says: 40% rizz, 60% delusion. Solid combo."
+  ];
+
+  function consultOracle() {
+    const result = document.getElementById('oracle-result');
+    result.textContent = "🌀 consulting the ancient spirits...";
+    setTimeout(() => {
+      const pick = oracleLines[Math.floor(Math.random() * oracleLines.length)];
+      result.textContent = pick;
+    }, 700);
+  }
+</script>
+
+</body>
+</html>
